@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 export const LanguageSwitcher = () => {
   const { lang, setLang } = useI18n();
   const current = LANGUAGES.find((l) => l.code === lang)!;
