@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ba Prerna brand: dark navy blue + lime green + white */
+    --background: 0 0% 100%;
+    --foreground: 224 65% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 65% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 65% 14%;
+
+    --primary: 224 65% 22%;            /* dark navy blue */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 224 60% 32%;
+
+    --secondary: 80 50% 95%;            /* very pale lime */
+    --secondary-foreground: 224 65% 22%;
+
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 12% 42%;
+
+    --accent: 80 60% 50%;               /* lime green */
+    --accent-foreground: 224 65% 14%;
+
+    --leaf: 80 60% 45%;
+    --leaf-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 18% 90%;
+    --input: 220 18% 90%;
+    --ring: 224 65% 22%;
+
+    --radius: 0.6rem;
+
+    --gradient-hero: linear-gradient(135deg, hsl(224 65% 18%) 0%, hsl(224 60% 28%) 60%, hsl(80 60% 45%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(80 70% 55%) 0%, hsl(80 60% 42%) 100%);
+    --gradient-cream: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(80 50% 96%) 100%);
+
+    --shadow-soft: 0 2px 8px -2px hsl(224 30% 15% / 0.08);
+    --shadow-elegant: 0 16px 40px -16px hsl(224 65% 22% / 0.25);
+    --shadow-gold: 0 12px 30px -12px hsl(80 60% 45% / 0.45);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 224 50% 8%;
+    --foreground: 0 0% 100%;
+    --card: 224 45% 12%;
+    --card-foreground: 0 0% 100%;
+    --popover: 224 45% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 80 60% 50%;
+    --primary-foreground: 224 65% 14%;
+    --secondary: 224 30% 18%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 224 30% 18%;
+    --muted-foreground: 220 15% 70%;
+    --accent: 80 60% 50%;
+    --accent-foreground: 224 65% 14%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 224 30% 22%;
+    --input: 224 30% 22%;
+    --ring: 80 60% 50%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+@layer utilities {
+  .bg-hero { background: var(--gradient-hero); }
+  .bg-gold { background: var(--gradient-gold); }
+  .bg-cream { background: var(--gradient-cream); }
+  .shadow-elegant { box-shadow: var(--shadow-elegant); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .transition-smooth { transition: var(--transition-smooth); }
+  .container-wide { @apply max-w-[1440px] mx-auto px-4 md:px-8; }
+}
