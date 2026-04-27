@@ -107,70 +107,70 @@ const Auth = ({ mode }: { mode: "login" | "register" }) => {
         </aside>
 
         {/* Right Side - Form */}
-        <div className="p-8 md:p-12 flex flex-col justify-center">
-          <div className="mb-8">
-            <Link to="/" className="md:hidden flex items-center gap-2 mb-8">
-              <span className="grid place-items-center h-10 w-10 rounded-full bg-primary text-primary-foreground">
-                <Leaf className="h-5 w-5" />
+        <div className="p-6 md:p-10 flex flex-col justify-center">
+          <div className="mb-6">
+            <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
+              <span className="grid place-items-center h-9 w-9 rounded-full bg-primary text-primary-foreground">
+                <Leaf className="h-4 w-4" />
               </span>
               <span className="font-display text-xl font-bold">Organic Nisarg</span>
             </Link>
 
-            <h1 className="font-display text-3xl font-bold text-primary">
+            <h1 className="font-display text-3xl font-bold text-primary tracking-tight">
               {mode === "login" ? "Welcome back" : "Create account"}
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-1 text-sm">
               {mode === "login" ? "Please enter your details to sign in." : "Start your organic journey with us today."}
             </p>
           </div>
 
-          <form onSubmit={submit} className="space-y-5">
+          <form onSubmit={submit} className="space-y-3.5">
             {mode === "register" && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Full name</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider opacity-70">Full name</Label>
                 <Input 
                   id="name"
                   value={form.name} 
                   onChange={set("name")} 
                   placeholder="John Doe" 
-                  className="h-11 border-border/60 focus:border-primary transition-all" 
+                  className="h-10 border-border/60 focus:border-primary transition-all text-sm" 
                   required 
                 />
               </div>
             )}
             
-            <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider opacity-70">Email address</Label>
               <Input 
                 id="email"
                 type="email" 
                 value={form.email} 
                 onChange={set("email")} 
                 placeholder="name@example.com" 
-                className="h-11 border-border/60 focus:border-primary transition-all" 
+                className="h-10 border-border/60 focus:border-primary transition-all text-sm" 
                 required 
               />
             </div>
 
             {mode === "register" && (
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone number (optional)</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="phone" className="text-xs font-semibold uppercase tracking-wider opacity-70">Phone number (optional)</Label>
                 <Input 
                   id="phone"
                   type="tel" 
                   value={form.phone} 
                   onChange={set("phone")} 
                   placeholder="+91 98765 43210" 
-                  className="h-11 border-border/60 focus:border-primary transition-all" 
+                  className="h-10 border-border/60 focus:border-primary transition-all text-sm" 
                 />
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider opacity-70">Password</Label>
                 {mode === "login" && (
-                  <Link to="/forgot-password" title="Coming soon" className="text-xs text-primary font-semibold hover:underline">
+                  <Link to="/forgot-password" title="Coming soon" className="text-[10px] text-primary font-bold hover:underline uppercase tracking-tighter">
                     Forgot?
                   </Link>
                 )}
@@ -181,18 +181,18 @@ const Auth = ({ mode }: { mode: "login" | "register" }) => {
                 value={form.password} 
                 onChange={set("password")} 
                 placeholder="••••••••" 
-                className="h-11 border-border/60 focus:border-primary transition-all" 
+                className="h-10 border-border/60 focus:border-primary transition-all text-sm" 
                 required 
                 minLength={6} 
               />
             </div>
 
-            <Button type="submit" variant="hero" size="lg" className="w-full h-12 text-base mt-4 shadow-elegant" disabled={busy}>
+            <Button type="submit" variant="hero" size="lg" className="w-full h-11 text-sm mt-2 shadow-elegant" disabled={busy}>
               {busy ? "Processing..." : mode === "login" ? "Sign in" : "Create account"}
             </Button>
           </form>
 
-          <p className="text-sm text-muted-foreground mt-8 text-center">
+          <p className="text-xs text-muted-foreground mt-6 text-center">
             {mode === "login" ? (
               <>
                 New to Nisarg?{" "}
@@ -210,9 +210,9 @@ const Auth = ({ mode }: { mode: "login" | "register" }) => {
             )}
           </p>
 
-          <Button asChild variant="ghost" size="sm" className="mt-8 self-center text-muted-foreground hover:text-primary">
+          <Button asChild variant="ghost" size="sm" className="mt-6 self-center text-muted-foreground hover:text-primary h-8 text-xs">
             <Link to="/">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to home
+              <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to home
             </Link>
           </Button>
         </div>
