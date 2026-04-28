@@ -53,8 +53,8 @@ export const ProductListRow = ({ product }: Props) => {
             className="w-full h-full object-contain p-2 group-hover:scale-105 transition-smooth duration-500"
           />
           {product.is_organic && (
-            <span className="absolute top-1.5 left-1.5 bg-leaf text-leaf-foreground text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
-              <Leaf className="h-2.5 w-2.5" /> Organic
+            <span className="absolute top-2 left-2 bg-leaf text-leaf-foreground text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1.5 shadow-sm">
+              <Leaf className="h-3 w-3" /> Organic
             </span>
           )}
         </Link>
@@ -92,7 +92,7 @@ export const ProductListRow = ({ product }: Props) => {
 
           {/* Variant Selector */}
           {product.variants && product.variants.length > 1 && (
-            <div className="flex flex-wrap gap-1.5 mt-2.5">
+            <div className="flex flex-wrap gap-2 mt-3.5">
               {product.variants.map((v, idx) => (
                 <button
                   key={idx}
@@ -101,9 +101,9 @@ export const ProductListRow = ({ product }: Props) => {
                     setSelectedVariant(idx);
                   }}
                   className={cn(
-                    "px-2.5 py-1 text-[10px] font-bold border rounded-md transition-smooth",
+                    "px-3 py-1.5 text-xs font-bold border rounded-md transition-smooth",
                     selectedVariant === idx
-                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      ? "bg-primary text-primary-foreground border-primary shadow-md"
                       : "bg-background text-muted-foreground border-border hover:border-primary/50"
                   )}
                 >
@@ -113,18 +113,17 @@ export const ProductListRow = ({ product }: Props) => {
             </div>
           )}
 
-          {/* Price */}
-          <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0.5 mt-2.5">
-            <span className="font-display text-xl sm:text-2xl font-bold text-foreground">
+          <div className="flex items-baseline flex-wrap gap-x-3 gap-y-1 mt-4">
+            <span className="font-display text-2xl sm:text-3xl font-bold text-foreground">
               <span className="text-sm align-top">₹</span>
               {price.toLocaleString("en-IN")}
             </span>
             {showMrp && (
               <>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   M.R.P: <span className="line-through">{formatINR(mrp)}</span>
                 </span>
-                <span className="text-xs font-semibold text-leaf">({discount}% off)</span>
+                <span className="text-sm font-semibold text-leaf">({discount}% off)</span>
               </>
             )}
           </div>
@@ -140,15 +139,14 @@ export const ProductListRow = ({ product }: Props) => {
             </p>
           </div>
 
-          {/* Actions */}
-          <div className="mt-auto pt-3 flex items-center gap-2 flex-wrap">
+          <div className="mt-auto pt-4 flex items-center gap-3 flex-wrap">
             <button
               disabled={!available}
               onClick={() => {
                 add(product, 1, selectedVariant);
                 toast.success(`Added ${product.variants?.[selectedVariant]?.label || ""} to cart`);
               }}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs sm:text-sm font-semibold px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-soft disabled:opacity-50 transition-smooth"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs sm:text-base font-bold px-5 sm:px-8 py-2 sm:py-3 rounded-full shadow-elegant disabled:opacity-50 hover:-translate-y-0.5 transition-smooth"
             >
               {available ? "Add to cart" : "Out of stock"}
             </button>
@@ -158,11 +156,11 @@ export const ProductListRow = ({ product }: Props) => {
                 toast.success(wished ? "Removed from wishlist" : "Added to wishlist");
               }}
               className={cn(
-                "inline-flex items-center gap-1 text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:border-primary transition-smooth",
+                "inline-flex items-center gap-2 text-xs sm:text-base font-semibold px-4 py-2 sm:py-3 rounded-full border border-border hover:border-primary hover:bg-secondary transition-smooth",
                 wished && "text-destructive border-destructive/40"
               )}
             >
-              <Heart className={cn("h-3.5 w-3.5", wished && "fill-current")} />
+              <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", wished && "fill-current")} />
               <span className="hidden sm:inline">{wished ? "Wishlisted" : "Wishlist"}</span>
             </button>
           </div>

@@ -7,14 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-export const LanguageSwitcher = () => {
+export const LanguageSwitcher = ({ showLabel = true }: { showLabel?: boolean }) => {
   const { lang, setLang } = useI18n();
   const current = LANGUAGES.find((l) => l.code === lang)!;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full hover:bg-primary-foreground/10 transition-smooth text-xs font-semibold">
         <Globe className="h-4 w-4" />
-        {current.native}
+        {showLabel && <span>{current.native}</span>}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
         {LANGUAGES.map((l) => (

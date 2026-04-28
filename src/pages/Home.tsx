@@ -19,8 +19,7 @@ const CATEGORIES = [
   { name: "Vegetables", slug: "vegetables", emoji: "🥦" },
   { name: "Herbs", slug: "herbs", emoji: "🌿" },
   { name: "Grains", slug: "grains", emoji: "🌾" },
-  { name: "Spices", slug: "spices", emoji: "🌶️" },
-  { name: "Dairy", slug: "dairy", emoji: "🥛" },
+  { name: "Flowers", slug: "flowers", emoji: "🌸" },
 ];
 
 const Home = () => {
@@ -99,7 +98,7 @@ const Home = () => {
             Browse all →
           </Link>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3 md:gap-4">
           {CATEGORIES.map((c) => (
             <Link
               key={c.slug}
@@ -129,7 +128,7 @@ const Home = () => {
         ) : showcase.length === 0 ? (
           <p className="text-muted-foreground">No products available right now.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {showcase.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         )}
@@ -172,7 +171,7 @@ const Home = () => {
       {recent.length > 0 && (
         <section className="container-wide pb-20">
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-6">Just landed</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {recent.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         </section>

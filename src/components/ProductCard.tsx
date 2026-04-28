@@ -40,12 +40,12 @@ export const ProductCard = ({ product, className }: Props) => {
           className="w-full h-full object-cover group-hover:scale-105 transition-smooth duration-500"
         />
         {product.is_organic && (
-          <span className="absolute top-2 left-2 bg-leaf text-leaf-foreground text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded-full flex items-center gap-1">
-            <Leaf className="h-3 w-3" /> Organic
+          <span className="absolute top-3 left-3 bg-leaf text-leaf-foreground text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+            <Leaf className="h-4 w-4" /> Organic
           </span>
         )}
         {!available && (
-          <span className="absolute inset-0 bg-foreground/40 backdrop-blur-[1px] grid place-items-center text-background font-semibold text-sm">
+          <span className="absolute inset-0 bg-foreground/40 backdrop-blur-[2px] grid place-items-center text-background font-bold text-base uppercase tracking-widest">
             Out of stock
           </span>
         )}
@@ -57,30 +57,30 @@ export const ProductCard = ({ product, className }: Props) => {
           }}
           aria-label="Toggle wishlist"
           className={cn(
-            "absolute top-2 right-2 grid place-items-center h-8 w-8 rounded-full backdrop-blur bg-background/80 hover:bg-background transition-smooth",
+            "absolute top-3 right-3 grid place-items-center h-10 w-10 rounded-full backdrop-blur-md bg-background/90 hover:bg-background shadow-sm hover:scale-110 transition-smooth",
             wished && "text-destructive"
           )}
         >
-          <Heart className={cn("h-4 w-4", wished && "fill-current")} />
+          <Heart className={cn("h-5 w-5", wished && "fill-current")} />
         </button>
       </Link>
 
-      <div className="p-3 md:p-4 flex flex-col flex-1">
+      <div className="p-4 md:p-5 flex flex-col flex-1">
         <Link to={`/products/${product.id}`} className="block">
-          <h3 className="font-medium text-sm md:text-[15px] line-clamp-2 leading-snug text-foreground hover:text-primary transition-smooth">
+          <h3 className="font-semibold text-base md:text-lg line-clamp-2 leading-snug text-foreground hover:text-primary transition-smooth">
             {product.name}
           </h3>
         </Link>
         {product.subtitle && (
-          <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{product.subtitle}</p>
+          <p className="text-sm text-muted-foreground mt-1.5 line-clamp-1">{product.subtitle}</p>
         )}
 
-        <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
-          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+        <div className="flex items-center gap-1.5 mt-2.5 text-sm text-muted-foreground">
+          <Star className="h-4 w-4 fill-accent text-accent" />
           <span className="font-medium text-foreground">{rating ? rating.toFixed(1) : "New"}</span>
           {!!product.review_count && <span>({product.review_count})</span>}
           {product.category && (
-            <span className="ml-auto capitalize px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-[10px]">
+            <span className="ml-auto capitalize px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-medium">
               {product.category}
             </span>
           )}
@@ -88,7 +88,7 @@ export const ProductCard = ({ product, className }: Props) => {
 
         {/* Variant Selector */}
         {product.variants && product.variants.length > 1 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
+          <div className="flex flex-wrap gap-2 mt-4">
             {product.variants.map((v, idx) => (
               <button
                 key={idx}
@@ -97,7 +97,7 @@ export const ProductCard = ({ product, className }: Props) => {
                   setSelectedVariant(idx);
                 }}
                 className={cn(
-                  "px-2 py-0.5 text-[10px] font-bold border rounded-md transition-smooth",
+                  "px-4 py-2 text-sm font-bold border rounded-md transition-smooth",
                   selectedVariant === idx
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-background text-muted-foreground border-border hover:border-primary/50"
@@ -109,11 +109,11 @@ export const ProductCard = ({ product, className }: Props) => {
           </div>
         )}
 
-        <div className="mt-auto pt-3 flex items-end justify-between gap-2">
+        <div className="mt-auto pt-4 flex items-end justify-between gap-2">
           <div>
-            <div className="font-display text-lg font-bold text-primary">{formatINR(price)}</div>
+            <div className="font-display text-xl font-bold text-primary leading-none">{formatINR(price)}</div>
             {showMrp && (
-              <div className="text-xs text-muted-foreground line-through">{formatINR(mrp)}</div>
+              <div className="text-sm text-muted-foreground line-through mt-1">{formatINR(mrp)}</div>
             )}
           </div>
           <button
@@ -124,9 +124,9 @@ export const ProductCard = ({ product, className }: Props) => {
               toast.success(`Added ${product.variants?.[selectedVariant]?.label || ""} to cart`);
             }}
             aria-label="Add to cart"
-            className="grid place-items-center h-9 w-9 rounded-full bg-primary text-primary-foreground hover:bg-primary-glow disabled:opacity-50 transition-smooth"
+            className="grid place-items-center h-12 w-12 rounded-full bg-primary text-primary-foreground hover:bg-primary-glow disabled:opacity-50 shadow-elegant hover:-translate-y-0.5 transition-smooth"
           >
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-5 w-5" />
           </button>
         </div>
       </div>

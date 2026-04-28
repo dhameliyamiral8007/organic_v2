@@ -8,6 +8,7 @@ import { useI18n } from "@/context/I18nContext";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import logo from "@/assets/logo.png";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,11 +30,14 @@ export const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrolled = window.scrollY > 40;
+      if (scrolled !== isScrolled) {
+        setIsScrolled(scrolled);
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isScrolled]);
 
   const NAV = [
     { to: "/", label: t("nav.home") },
@@ -52,7 +56,10 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-primary text-primary-foreground shadow-elegant">
+    <header className={cn(
+      "sticky top-0 z-40 bg-primary text-primary-foreground shadow-elegant transition-colors duration-300 overflow-hidden",
+      isScrolled ? "h-16" : "h-auto"
+    )}>
       {/* Top bar */}
       {!isScrolled && (
         <div className="bg-primary-foreground/5 border-b border-primary-foreground/10 text-xs">
@@ -63,8 +70,11 @@ export const Header = () => {
         </div>
       )}
 
-      {/* Main */}
-      <div className={`container-wide flex items-center gap-3 md:gap-6 transition-all duration-300 ${isScrolled ? 'h-16' : 'h-16 md:h-20'}`}>
+      {/* Main Bar */}
+      <div className={cn(
+        "container-wide flex items-center gap-3 md:gap-6",
+        isScrolled ? "h-16" : "h-16 md:h-20"
+      )}>
         <button
           className="md:hidden p-2 -ml-2"
           onClick={() => setOpen((o) => !o)}
@@ -74,11 +84,22 @@ export const Header = () => {
         </button>
 
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <img src={logo} alt="Ba Prerna Nisarg" className={`transition-all duration-300 object-contain ${isScrolled ? 'h-12' : 'h-16'}`} />
+          <img 
+            src={logo} 
+            alt="Ba Prerna Nisarg" 
+            className={cn(
+              "object-contain transition-[height] duration-300",
+              isScrolled ? "h-10" : "h-14 md:h-16"
+            )} 
+          />
         </Link>
 
-        {!isScrolled && (
-          <form onSubmit={onSearch} className="hidden md:flex flex-1 max-w-2xl">
+        {/* Search OR Nav - Direct Swap */}
+        {!isScrolled ? (
+          <form 
+            onSubmit={onSearch} 
+            className="hidden md:flex flex-1 max-w-2xl"
+          >
             <div className="flex w-full rounded-full overflow-hidden bg-background text-foreground shadow-soft">
               <input
                 value={q}
@@ -95,31 +116,28 @@ export const Header = () => {
               </button>
             </div>
           </form>
+        ) : (
+          <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+            {NAV.map((n) => (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                end={n.to === "/"}
+                className={({ isActive }) =>
+                  `text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full whitespace-nowrap transition-smooth ${
+                    isActive ? "bg-accent text-accent-foreground" : "hover:bg-primary-foreground/10"
+                  }`
+                }
+              >
+                {n.label}
+              </NavLink>
+            ))}
+          </nav>
         )}
 
-        {isScrolled && <div className="flex-1" />}
-
+        {/* Right Actions */}
         <div className="ml-auto flex items-center gap-1 md:gap-2">
-          {isScrolled && (
-            <nav className="hidden lg:flex items-center gap-0.5 mr-2">
-              {NAV.map((n) => (
-                <NavLink
-                  key={n.to}
-                  to={n.to}
-                  end={n.to === "/"}
-                  className={({ isActive }) =>
-                    `text-[11px] uppercase tracking-wider px-2.5 py-1.5 rounded-full whitespace-nowrap transition-smooth ${
-                      isActive ? "bg-accent text-accent-foreground" : "hover:bg-primary-foreground/10"
-                    }`
-                  }
-                >
-                  {n.label}
-                </NavLink>
-              ))}
-            </nav>
-          )}
-
-          {!isScrolled && <LanguageSwitcher />}
+          <LanguageSwitcher showLabel={!isScrolled} />
 
           <Link
             to="/wishlist"
@@ -150,11 +168,15 @@ export const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-primary-foreground/10 transition-smooth">
+                <button className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-primary-foreground/10 transition-smooth">
                   <span className="grid place-items-center h-7 w-7 rounded-full bg-accent text-accent-foreground text-xs font-bold">
                     {user.name?.[0]?.toUpperCase() || "U"}
                   </span>
-                  {!isScrolled && <span className="text-sm font-medium max-w-[120px] truncate">{user.name?.split(" ")[0]}</span>}
+                  {!isScrolled && (
+                    <span className="hidden md:inline text-sm font-medium max-w-[120px] truncate">
+                      {user.name?.split(" ")[0]}
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
@@ -168,9 +190,13 @@ export const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="hero" size="sm" className={`hidden md:inline-flex ${isScrolled ? 'px-3' : ''}`}>
+            <Button asChild variant="hero" size="sm" className={cn(
+              "hidden md:inline-flex",
+              isScrolled ? "px-3" : "px-5"
+            )}>
               <Link to="/login">
-                <User className="h-4 w-4 mr-1" /> {!isScrolled && t("header.signin")}
+                <User className="h-4 w-4 mr-1" /> 
+                {!isScrolled && <span>{t("header.signin")}</span>}
               </Link>
             </Button>
           )}
