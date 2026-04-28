@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Star, Leaf } from "lucide-react";
 import type { Product } from "@/types";
@@ -15,11 +16,13 @@ interface Props {
 export const ProductCard = ({ product, className }: Props) => {
   const { add } = useCart();
   const { has, toggle } = useWishlist();
-  const price = effectivePrice(product, 0);
+  const [selectedVariant, setSelectedVariant] = useState(0);
+
+  const price = effectivePrice(product, selectedVariant);
   const mrp = Number(product.price) || 0;
-  const showMrp = product.variants?.[0]?.price != null && mrp > 0 && mrp > price;
+  const showMrp = product.variants?.[selectedVariant]?.price != null && mrp > 0 && mrp > price;
   const wished = has(product.id);
-  const available = inStock(product, 0);
+  const available = inStock(product, selectedVariant);
   const rating = Number(product.rating) || 0;
 
   return (
@@ -31,7 +34,7 @@ export const ProductCard = ({ product, className }: Props) => {
     >
       <Link to={`/products/${product.id}`} className="relative aspect-square bg-muted overflow-hidden">
         <img
-          src={productImage(product, 0)}
+          src={productImage(product, selectedVariant)}
           alt={product.name}
           loading="lazy"
           className="w-full h-full object-cover group-hover:scale-105 transition-smooth duration-500"
@@ -83,6 +86,29 @@ export const ProductCard = ({ product, className }: Props) => {
           )}
         </div>
 
+        {/* Variant Selector */}
+        {product.variants && product.variants.length > 1 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {product.variants.map((v, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedVariant(idx);
+                }}
+                className={cn(
+                  "px-2 py-0.5 text-[10px] font-bold border rounded-md transition-smooth",
+                  selectedVariant === idx
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                )}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="mt-auto pt-3 flex items-end justify-between gap-2">
           <div>
             <div className="font-display text-lg font-bold text-primary">{formatINR(price)}</div>
@@ -94,8 +120,8 @@ export const ProductCard = ({ product, className }: Props) => {
             disabled={!available}
             onClick={(e) => {
               e.preventDefault();
-              add(product, 1, 0);
-              toast.success("Added to cart");
+              add(product, 1, selectedVariant);
+              toast.success(`Added ${product.variants?.[selectedVariant]?.label || ""} to cart`);
             }}
             aria-label="Add to cart"
             className="grid place-items-center h-9 w-9 rounded-full bg-primary text-primary-foreground hover:bg-primary-glow disabled:opacity-50 transition-smooth"

@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Heart, Search, ShoppingCart, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
@@ -24,7 +24,16 @@ export const Header = () => {
   const { t } = useI18n();
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const NAV = [
     { to: "/", label: t("nav.home") },
@@ -45,15 +54,17 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-40 bg-primary text-primary-foreground shadow-elegant">
       {/* Top bar */}
-      <div className="bg-primary-foreground/5 border-b border-primary-foreground/10 text-xs">
-        <div className="container-wide flex h-8 items-center justify-between">
-          <span className="hidden md:inline opacity-80">{t("header.tagline")}</span>
-          <span className="opacity-80">Pure · Natural · Trusted</span>
+      {!isScrolled && (
+        <div className="bg-primary-foreground/5 border-b border-primary-foreground/10 text-xs">
+          <div className="container-wide flex h-8 items-center justify-between">
+            <span className="hidden md:inline opacity-80">{t("header.tagline")}</span>
+            <span className="opacity-80">Pure · Natural · Trusted</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main */}
-      <div className="container-wide flex items-center gap-3 md:gap-6 h-16 md:h-20">
+      <div className={`container-wide flex items-center gap-3 md:gap-6 transition-all duration-300 ${isScrolled ? 'h-16' : 'h-16 md:h-20'}`}>
         <button
           className="md:hidden p-2 -ml-2"
           onClick={() => setOpen((o) => !o)}
@@ -63,30 +74,52 @@ export const Header = () => {
         </button>
 
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <img src={logo} alt="Ba Prerna Nisarg" className="h-16 w-auto object-contain" />
-     
+          <img src={logo} alt="Ba Prerna Nisarg" className={`transition-all duration-300 object-contain ${isScrolled ? 'h-12' : 'h-16'}`} />
         </Link>
 
-        <form onSubmit={onSearch} className="hidden md:flex flex-1 max-w-2xl">
-          <div className="flex w-full rounded-full overflow-hidden bg-background text-foreground shadow-soft">
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={t("header.search")}
-              className="flex-1 px-5 py-2.5 bg-transparent outline-none text-sm"
-            />
-            <button
-              type="submit"
-              className="px-5 bg-accent text-accent-foreground hover:brightness-105 transition-smooth"
-              aria-label="Search"
-            >
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-        </form>
+        {!isScrolled && (
+          <form onSubmit={onSearch} className="hidden md:flex flex-1 max-w-2xl">
+            <div className="flex w-full rounded-full overflow-hidden bg-background text-foreground shadow-soft">
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder={t("header.search")}
+                className="flex-1 px-5 py-2.5 bg-transparent outline-none text-sm"
+              />
+              <button
+                type="submit"
+                className="px-5 bg-accent text-accent-foreground hover:brightness-105 transition-smooth"
+                aria-label="Search"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </div>
+          </form>
+        )}
+
+        {isScrolled && <div className="flex-1" />}
 
         <div className="ml-auto flex items-center gap-1 md:gap-2">
-          <LanguageSwitcher />
+          {isScrolled && (
+            <nav className="hidden lg:flex items-center gap-0.5 mr-2">
+              {NAV.map((n) => (
+                <NavLink
+                  key={n.to}
+                  to={n.to}
+                  end={n.to === "/"}
+                  className={({ isActive }) =>
+                    `text-[11px] uppercase tracking-wider px-2.5 py-1.5 rounded-full whitespace-nowrap transition-smooth ${
+                      isActive ? "bg-accent text-accent-foreground" : "hover:bg-primary-foreground/10"
+                    }`
+                  }
+                >
+                  {n.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
+
+          {!isScrolled && <LanguageSwitcher />}
 
           <Link
             to="/wishlist"
@@ -121,7 +154,7 @@ export const Header = () => {
                   <span className="grid place-items-center h-7 w-7 rounded-full bg-accent text-accent-foreground text-xs font-bold">
                     {user.name?.[0]?.toUpperCase() || "U"}
                   </span>
-                  <span className="text-sm font-medium max-w-[120px] truncate">{user.name?.split(" ")[0]}</span>
+                  {!isScrolled && <span className="text-sm font-medium max-w-[120px] truncate">{user.name?.split(" ")[0]}</span>}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
@@ -135,9 +168,9 @@ export const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="hero" size="sm" className="hidden md:inline-flex">
+            <Button asChild variant="hero" size="sm" className={`hidden md:inline-flex ${isScrolled ? 'px-3' : ''}`}>
               <Link to="/login">
-                <User className="h-4 w-4 mr-1" /> {t("header.signin")}
+                <User className="h-4 w-4 mr-1" /> {!isScrolled && t("header.signin")}
               </Link>
             </Button>
           )}
@@ -145,41 +178,45 @@ export const Header = () => {
       </div>
 
       {/* Mobile search */}
-      <div className="md:hidden container-wide pb-3">
-        <form onSubmit={onSearch} className="flex">
-          <div className="flex w-full rounded-full overflow-hidden bg-background text-foreground">
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={t("header.search")}
-              className="flex-1 px-4 py-2 bg-transparent outline-none text-sm"
-            />
-            <button type="submit" className="px-4 bg-accent text-accent-foreground" aria-label="Search">
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-        </form>
-      </div>
+      {!isScrolled && (
+        <div className="md:hidden container-wide pb-3">
+          <form onSubmit={onSearch} className="flex">
+            <div className="flex w-full rounded-full overflow-hidden bg-background text-foreground">
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder={t("header.search")}
+                className="flex-1 px-4 py-2 bg-transparent outline-none text-sm"
+              />
+              <button type="submit" className="px-4 bg-accent text-accent-foreground" aria-label="Search">
+                <Search className="h-4 w-4" />
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Category strip */}
-      <nav className="hidden md:block bg-primary-glow/30 border-t border-primary-foreground/10">
-        <div className="container-wide flex items-center gap-1 h-10 overflow-x-auto">
-          {NAV.map((n) => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              end={n.to === "/"}
-              className={({ isActive }) =>
-                `text-xs uppercase tracking-wider px-3 py-1.5 rounded-full whitespace-nowrap transition-smooth ${
-                  isActive ? "bg-accent text-accent-foreground" : "hover:bg-primary-foreground/10"
-                }`
-              }
-            >
-              {n.label}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
+      {!isScrolled && (
+        <nav className="hidden md:block bg-primary-glow/30 border-t border-primary-foreground/10">
+          <div className="container-wide flex items-center gap-1 h-10 overflow-x-auto">
+            {NAV.map((n) => (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                end={n.to === "/"}
+                className={({ isActive }) =>
+                  `text-xs uppercase tracking-wider px-3 py-1.5 rounded-full whitespace-nowrap transition-smooth ${
+                    isActive ? "bg-accent text-accent-foreground" : "hover:bg-primary-foreground/10"
+                  }`
+                }
+              >
+                {n.label}
+              </NavLink>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {open && (
         <div className="md:hidden border-t border-primary-foreground/10 bg-primary">

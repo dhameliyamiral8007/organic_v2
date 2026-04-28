@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Star, Truck, Leaf, Heart } from "lucide-react";
 import type { Product } from "@/types";
@@ -25,12 +26,14 @@ const deliveryDates = () => {
 export const ProductListRow = ({ product }: Props) => {
   const { add } = useCart();
   const { has, toggle } = useWishlist();
-  const price = effectivePrice(product, 0);
+  const [selectedVariant, setSelectedVariant] = useState(0);
+
+  const price = effectivePrice(product, selectedVariant);
   const mrp = Number(product.price) || 0;
-  const showMrp = product.variants?.[0]?.price != null && mrp > price;
+  const showMrp = product.variants?.[selectedVariant]?.price != null && mrp > price;
   const discount = showMrp ? Math.round(((mrp - price) / mrp) * 100) : 0;
   const wished = has(product.id);
-  const available = inStock(product, 0);
+  const available = inStock(product, selectedVariant);
   const rating = Number(product.rating) || 0;
   const { free, fast } = deliveryDates();
   const desc = stripHtml(product.description || product.subtitle || "");
@@ -44,7 +47,7 @@ export const ProductListRow = ({ product }: Props) => {
           className="relative block aspect-square bg-muted rounded-lg overflow-hidden"
         >
           <img
-            src={productImage(product, 0)}
+            src={productImage(product, selectedVariant)}
             alt={product.name}
             loading="lazy"
             className="w-full h-full object-contain p-2 group-hover:scale-105 transition-smooth duration-500"
@@ -87,14 +90,31 @@ export const ProductListRow = ({ product }: Props) => {
             )}
           </div>
 
-          {!!product.review_count && product.review_count > 50 && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {product.review_count}+ bought recently
-            </p>
+          {/* Variant Selector */}
+          {product.variants && product.variants.length > 1 && (
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
+              {product.variants.map((v, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedVariant(idx);
+                  }}
+                  className={cn(
+                    "px-2.5 py-1 text-[10px] font-bold border rounded-md transition-smooth",
+                    selectedVariant === idx
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                  )}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
           )}
 
           {/* Price */}
-          <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0.5 mt-2">
+          <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0.5 mt-2.5">
             <span className="font-display text-xl sm:text-2xl font-bold text-foreground">
               <span className="text-sm align-top">₹</span>
               {price.toLocaleString("en-IN")}
@@ -110,7 +130,7 @@ export const ProductListRow = ({ product }: Props) => {
           </div>
 
           {/* Delivery */}
-          <div className="mt-2 text-xs sm:text-sm text-muted-foreground space-y-0.5">
+          <div className="mt-2.5 text-xs sm:text-sm text-muted-foreground space-y-0.5">
             <p className="flex items-center gap-1.5">
               <Truck className="h-3.5 w-3.5 text-leaf shrink-0" />
               FREE delivery <span className="font-semibold text-foreground">{free}</span>
@@ -120,20 +140,13 @@ export const ProductListRow = ({ product }: Props) => {
             </p>
           </div>
 
-          {/* Description (desktop) */}
-          {desc && (
-            <p className="hidden md:block text-xs text-muted-foreground mt-2 line-clamp-2">
-              {desc}
-            </p>
-          )}
-
           {/* Actions */}
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
+          <div className="mt-auto pt-3 flex items-center gap-2 flex-wrap">
             <button
               disabled={!available}
               onClick={() => {
-                add(product, 1, 0);
-                toast.success("Added to cart");
+                add(product, 1, selectedVariant);
+                toast.success(`Added ${product.variants?.[selectedVariant]?.label || ""} to cart`);
               }}
               className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs sm:text-sm font-semibold px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-soft disabled:opacity-50 transition-smooth"
             >
