@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight, Leaf, ShieldCheck, Truck, Sprout } from "lucide-react";
@@ -6,6 +7,7 @@ import type { Product } from "@/types";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/Skeletons";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import heroImg from "@/assets/hero-organic.jpg";
 import bannerImg from "@/assets/banner-categories.jpg";
 import { JivdayaBanner } from "@/components/JivdayaBanner";
@@ -14,13 +16,19 @@ import { Testimonials } from "@/components/Testimonials";
 const fetchAll = async (): Promise<Product[]> => unwrap<Product[]>(await api.get("/api/products"));
 const fetchFeatured = async (): Promise<Product[]> => unwrap<Product[]>(await api.get("/api/products/featured"));
 
-const CATEGORIES = [
-  { name: "Fruits", slug: "fruits", emoji: "🍎" },
-  { name: "Vegetables", slug: "vegetables", emoji: "🥦" },
-  { name: "Herbs", slug: "herbs", emoji: "🌿" },
-  { name: "Grains", slug: "grains", emoji: "🌾" },
-  { name: "Flowers", slug: "flowers", emoji: "🌸" },
-];
+const CATEGORY_ICONS: Record<string, string> = {
+  fruits: "🍎",
+  vegetables: "🥦",
+  herbs: "🌿",
+  grains: "🌾",
+  flowers: "🌸",
+  flower: "🌸",
+  seeds: "🌱",
+  spices: "🌶️",
+  organic: "🍃",
+  pantry: "🍯",
+  dairy: "🥛",
+};
 
 const Home = () => {
   const { data: all, isLoading } = useQuery({ queryKey: ["products"], queryFn: fetchAll });
@@ -28,6 +36,16 @@ const Home = () => {
 
   const showcase = (featured && featured.length > 0 ? featured : all)?.slice(0, 8) ?? [];
   const recent = all?.slice(0, 4) ?? [];
+
+  const dynamicCategories = useMemo(() => {
+    const set = new Set<string>();
+    (all || []).forEach((p) => p.category && set.add(p.category));
+    return Array.from(set).sort().map(cat => ({
+      name: cat,
+      slug: cat,
+      emoji: CATEGORY_ICONS[cat.toLowerCase()] || "📦"
+    }));
+  }, [all]);
 
   return (
     <>
@@ -98,15 +116,20 @@ const Home = () => {
             Browse all →
           </Link>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3 md:gap-4">
-          {CATEGORIES.map((c) => (
+        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          {dynamicCategories.map((c) => (
             <Link
               key={c.slug}
               to={`/products?category=${c.slug}`}
-              className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border hover:border-primary hover:shadow-soft transition-smooth"
+              className="group relative flex flex-col items-center gap-4 py-8 px-4 rounded-3xl bg-white border border-border hover:border-primary/30 hover:shadow-elegant transition-smooth overflow-hidden text-center w-[calc(50%-8px)] sm:w-[calc(33.33%-11px)] md:w-48"
             >
-              <div className="text-3xl md:text-4xl group-hover:scale-110 transition-smooth">{c.emoji}</div>
-              <div className="text-sm font-medium text-center">{c.name}</div>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
+              <div className="relative z-10 text-4xl md:text-5xl group-hover:scale-110 transition-smooth duration-500 drop-shadow-md">
+                {c.emoji}
+              </div>
+              <div className="relative z-10 text-sm md:text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-smooth">
+                {c.name}
+              </div>
             </Link>
           ))}
         </div>
