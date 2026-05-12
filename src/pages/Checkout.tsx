@@ -354,11 +354,14 @@ const Checkout = () => {
                           mode="single"
                           selected={details.dob ? new Date(details.dob) : undefined}
                           onSelect={(d) => setDetails({ ...details, dob: d ? format(d, "yyyy-MM-dd") : "" })}
-                          disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                          disabled={(date) => date < new Date("1900-01-01")}
                           initialFocus
                           captionLayout="dropdown-buttons"
                           fromYear={1900}
-                          toYear={new Date().getFullYear()}
+                          toYear={new Date().getFullYear() + 10}
+                          classNames={{
+                            caption_label: "hidden",
+                          }}
                           className={cn("p-3 pointer-events-auto")}
                         />
                       </PopoverContent>
