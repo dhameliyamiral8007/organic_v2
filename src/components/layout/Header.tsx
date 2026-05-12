@@ -45,7 +45,7 @@ export const Header = () => {
     { to: "/about", label: t("nav.about") },
     { to: "/blog", label: t("nav.blog") },
     { to: "/faq", label: t("nav.faq") },
-    { to: "/donate", label: "Donate" },
+    { to: "/donate", label: t("nav.donate") },
     { to: "/contact", label: t("nav.contact") },
   ];
 
@@ -180,13 +180,13 @@ export const Header = () => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel>Hello, {user.name}</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("auth.hello")}, {user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/profile">Your Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/orders">Your Orders</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/wishlist">Wishlist</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/profile">{t("auth.profile")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/orders">{t("auth.orders")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/wishlist">{t("auth.wishlist")}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="text-destructive">Sign out</DropdownMenuItem>
+                <DropdownMenuItem onClick={logout} className="text-destructive">{t("auth.signout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -259,13 +259,13 @@ export const Header = () => {
             ))}
             {!user ? (
               <Link to="/login" onClick={() => setOpen(false)} className="mt-3 py-2 text-sm font-semibold text-accent">
-                Sign in / Create account
+                {t("auth.signin_create")}
               </Link>
             ) : (
               <>
-                <Link to="/profile" onClick={() => setOpen(false)} className="py-2 text-sm border-b border-primary-foreground/10">Profile</Link>
-                <Link to="/orders" onClick={() => setOpen(false)} className="py-2 text-sm border-b border-primary-foreground/10">Orders</Link>
-                <button onClick={() => { logout(); setOpen(false); }} className="py-2 text-sm text-left text-destructive">Sign out</button>
+                <Link to="/profile" onClick={() => setOpen(false)} className="py-2 text-sm border-b border-primary-foreground/10">{t("auth.profile")}</Link>
+                <Link to="/orders" onClick={() => setOpen(false)} className="py-2 text-sm border-b border-primary-foreground/10">{t("auth.orders")}</Link>
+                <button onClick={() => { logout(); setOpen(false); }} className="py-2 text-sm text-left text-destructive">{t("auth.signout")}</button>
               </>
             )}
           </div>
@@ -274,3 +274,4 @@ export const Header = () => {
     </header>
   );
 };
+

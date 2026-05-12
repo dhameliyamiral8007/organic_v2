@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Calendar, BookOpen } from "lucide-react";
+import { useI18n } from "@/context/I18nContext";
 import { api, unwrap } from "@/lib/api";
 
 interface BlogPostType {
@@ -89,23 +90,25 @@ export const BlogPost = () => {
   );
 };
 
+
 const Blog = () => {
   const { data: posts, isLoading } = useQuery({ queryKey: ["blogs"], queryFn: fetchBlogs });
+  const { t } = useI18n();
 
   return (
     <>
       <section className="bg-hero text-primary-foreground">
         <div className="container-wide py-14 md:py-20">
           <span className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.18em]">
-            <BookOpen className="h-3.5 w-3.5 text-accent" /> Knowledge Center
+            <BookOpen className="h-3.5 w-3.5 text-accent" /> {t("blog.knowledge_center")}
           </span>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mt-5">Grow with us</h1>
-          <p className="mt-3 max-w-2xl opacity-90">Practical guides, soil science and stories from the organic movement.</p>
+          <h1 className="font-display text-4xl md:text-6xl font-bold mt-5">{t("blog.title")}</h1>
+          <p className="mt-3 max-w-2xl opacity-90">{t("blog.subtitle")}</p>
         </div>
       </section>
 
       <section className="container-wide py-16 grid md:grid-cols-2 gap-6">
-        {isLoading && <p className="text-muted-foreground">Loading articles...</p>}
+        {isLoading && <p className="text-muted-foreground">{t("blog.loading")}</p>}
         {(posts || []).map((p) => (
           <Link
             key={p.slug || p._id || p.id}
@@ -147,7 +150,7 @@ const Blog = () => {
                   </span>
                 </div>
                 <span className="inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-                  Read More <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-smooth" />
+                  {t("blog.read_more")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-smooth" />
                 </span>
               </div>
             </div>

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { useI18n } from "@/context/I18nContext";
 import qrImg from "@/assets/qrcode.webp";
 
 interface Donor {
@@ -31,6 +32,7 @@ const formatINR = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
 
 const Donate = () => {
+  const { t } = useI18n();
   const qc = useQueryClient();
   const [amount, setAmount] = useState<number>(501);
   const [name, setName] = useState("");
@@ -123,27 +125,26 @@ const Donate = () => {
               <Heart className="h-3.5 w-3.5 mr-1.5 fill-current" /> Jivdaya Trust
             </Badge>
             <h1 className="font-display text-4xl md:text-5xl font-bold leading-tight">
-              Give a Little, <span className="text-accent">Save a Lot</span>
+              {t("donate.title").split(",").map((s, i) => i === 0 ? s + "," : <span key={i} className="text-accent">{s}</span>)}
             </h1>
             <p className="mt-5 text-primary-foreground/85 max-w-lg leading-relaxed">
-              Every rupee you donate goes directly to caring for rescued birds and animals at Jivdaya Trust.
-              Scan the QR or donate online — receive your receipt instantly.
+              {t("donate.subtitle")}
             </p>
             <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
               <Card className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground p-4">
                 <Users className="h-5 w-5 text-accent mb-2" />
                 <div className="font-display text-2xl font-bold">{totals.count}+</div>
-                <div className="text-[10px] uppercase tracking-wider opacity-80">Donors</div>
+                <div className="text-[10px] uppercase tracking-wider opacity-80">{t("donate.stats.donors")}</div>
               </Card>
               <Card className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground p-4">
                 <TrendingUp className="h-5 w-5 text-accent mb-2" />
                 <div className="font-display text-2xl font-bold">{formatINR(totals.total)}</div>
-                <div className="text-[10px] uppercase tracking-wider opacity-80">Raised</div>
+                <div className="text-[10px] uppercase tracking-wider opacity-80">{t("donate.stats.raised")}</div>
               </Card>
               <Card className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground p-4">
                 <ShieldCheck className="h-5 w-5 text-accent mb-2" />
                 <div className="font-display text-2xl font-bold">100%</div>
-                <div className="text-[10px] uppercase tracking-wider opacity-80">To Cause</div>
+                <div className="text-[10px] uppercase tracking-wider opacity-80">{t("donate.stats.to_cause")}</div>
               </Card>
             </div>
           </div>
@@ -153,8 +154,8 @@ const Donate = () => {
             <Card className="bg-card text-card-foreground p-6 rounded-3xl shadow-2xl border-2 border-accent/20">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">Scan & Pay</p>
-                  <p className="font-display font-bold text-primary">UPI · GPay · PhonePe · Paytm</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">{t("donate.scan.title")}</p>
+                  <p className="font-display font-bold text-primary">{t("donate.scan.methods")}</p>
                 </div>
                 <Sparkles className="h-5 w-5 text-accent" />
               </div>
@@ -176,7 +177,7 @@ const Donate = () => {
                   <p className="font-mono text-sm font-semibold text-primary">{UPI_ID}</p>
                 </div>
                 <Button size="sm" variant="ghost" onClick={copyUpi} className="h-8">
-                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  <Copy className="h-3.5 w-3.5 mr-1" /> {t("common.copy")}
                 </Button>
               </div>
 
@@ -184,7 +185,7 @@ const Donate = () => {
                 href={upiUrl}
                 className="mt-3 block text-center text-xs text-muted-foreground hover:text-accent"
               >
-                Open in UPI app →
+                {t("donate.scan.open_app")} →
               </a>
             </Card>
           </div>
@@ -194,12 +195,12 @@ const Donate = () => {
       {/* Donation form + Receipt */}
       <section className="container-wide py-16 grid lg:grid-cols-5 gap-8">
         <Card className="lg:col-span-3 p-6 md:p-8 rounded-2xl">
-          <h2 className="font-display text-2xl font-bold text-primary">Make a Donation</h2>
-          <p className="text-sm text-muted-foreground mt-1">Choose an amount and we'll generate a digital receipt instantly.</p>
+          <h2 className="font-display text-2xl font-bold text-primary">{t("donate.form.title")}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{t("donate.form.subtitle")}</p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-5">
             <div>
-              <Label className="mb-2 block">Select Amount</Label>
+              <Label className="mb-2 block">{t("donate.form.select_amount")}</Label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                 {PRESET.map((v) => (
                   <button
@@ -231,33 +232,33 @@ const Donate = () => {
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name">Full Name {!anonymous && <span className="text-destructive">*</span>}</Label>
+                <Label htmlFor="name">{t("donate.form.name")} {!anonymous && <span className="text-destructive">*</span>}</Label>
                 <Input id="name" value={name} disabled={anonymous} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
               </div>
               <div>
-                <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
+                <Label htmlFor="email">{t("donate.form.email")} <span className="text-destructive">*</span></Label>
                 <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
               </div>
               <div>
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">{t("donate.form.phone")}</Label>
                 <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91…" />
               </div>
               <div className="flex items-end">
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
                   <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="h-4 w-4 accent-[hsl(var(--accent))]" />
-                  Donate anonymously
+                  {t("donate.form.anonymous")}
                 </label>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="msg">Message (optional)</Label>
+              <Label htmlFor="msg">{t("donate.form.message")}</Label>
               <Textarea id="msg" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="A few words of support…" />
             </div>
 
             <Button type="submit" variant="hero" size="lg" disabled={submit.isPending} className="w-full">
               <Heart className="h-4 w-4 mr-1.5 fill-current" />
-              {submit.isPending ? "Processing…" : `Donate ${formatINR(amount || 0)}`}
+              {submit.isPending ? "Processing…" : `${t("donate.form.submit")} ${formatINR(amount || 0)}`}
             </Button>
           </form>
         </Card>
@@ -273,15 +274,15 @@ const Donate = () => {
                   <div className="mx-auto h-14 w-14 rounded-full bg-accent/15 grid place-items-center mb-3">
                     <Heart className="h-6 w-6 text-accent" />
                   </div>
-                  <h3 className="font-display font-bold text-primary">Your receipt appears here</h3>
+                  <h3 className="font-display font-bold text-primary">{t("donate.receipt.title")}</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Complete the form to generate a downloadable donation receipt.
+                    {t("donate.receipt.subtitle")}
                   </p>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> Instant digital receipt</li>
-                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> 80G eligible (where applicable)</li>
-                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> Secure & private</li>
+                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> {t("donate.receipt.instant")}</li>
+                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> {t("donate.receipt.80g")}</li>
+                  <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /> {t("donate.receipt.secure")}</li>
                 </ul>
               </Card>
             )}
@@ -293,7 +294,7 @@ const Donate = () => {
       <section className="container-wide pb-20">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">Recent Donors</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">{t("donate.recent_donors")}</h2>
             <p className="text-sm text-muted-foreground mt-1">A heartfelt thank you to every contributor 💚</p>
           </div>
           <Badge variant="secondary" className="hidden sm:inline-flex">
@@ -362,6 +363,7 @@ const Receipt = ({
   data: { id: string; amount: number; name: string; date: string };
   onClose: () => void;
 }) => {
+  const { t } = useI18n();
   const print = () => window.print();
   return (
     <Card className="rounded-2xl overflow-hidden border-2 border-accent/30 shadow-elegant">
@@ -370,36 +372,36 @@ const Receipt = ({
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Donation Receipt</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">{t("donate.receipt.badge")}</p>
             <p className="font-display text-lg font-bold text-primary">Ba Prerna Nisarg</p>
           </div>
           <CheckCircle2 className="h-8 w-8 text-accent" />
         </div>
 
         <div className="mt-5 rounded-xl bg-secondary/40 p-4 text-center">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Amount Donated</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">{t("donate.receipt.amount_label")}</p>
           <p className="font-display text-3xl font-bold text-primary mt-1">{formatINR(data.amount)}</p>
         </div>
 
         <dl className="mt-5 space-y-2.5 text-sm">
-          <Row label="Receipt No." value={data.id} mono />
-          <Row label="Donor" value={data.name} />
-          <Row label="Date" value={data.date} />
-          <Row label="Beneficiary" value="Jivdaya Trust" />
-          <Row label="Status" value={<span className="text-accent font-bold">✓ Confirmed</span>} />
+          <Row label={t("donate.receipt.no")} value={data.id} mono />
+          <Row label={t("donate.receipt.donor")} value={data.name} />
+          <Row label={t("donate.receipt.date")} value={data.date} />
+          <Row label={t("donate.receipt.beneficiary")} value="Jivdaya Trust" />
+          <Row label={t("donate.receipt.status")} value={<span className="text-accent font-bold">✓ {t("donate.receipt.confirmed")}</span>} />
         </dl>
 
         <div className="mt-5 border-t border-dashed border-border pt-4 text-center">
           <p className="text-xs text-muted-foreground italic">
-            "Your kindness rescues lives. Thank you for being part of this mission."
+            "{t("donate.receipt.thank_you")}"
           </p>
         </div>
 
         <div className="mt-5 flex gap-2">
           <Button variant="outline" className="flex-1" onClick={print}>
-            <Download className="h-4 w-4 mr-1.5" /> Save / Print
+            <Download className="h-4 w-4 mr-1.5" /> {t("donate.receipt.save")}
           </Button>
-          <Button variant="ghost" onClick={onClose}>Close</Button>
+          <Button variant="ghost" onClick={onClose}>{t("donate.receipt.close")}</Button>
         </div>
       </div>
       <div className="h-3 bg-[radial-gradient(circle_at_6px_50%,hsl(var(--background))_3px,transparent_3px)] [background-size:12px_12px] bg-accent" />
@@ -415,3 +417,4 @@ const Row = ({ label, value, mono }: { label: string; value: React.ReactNode; mo
 );
 
 export default Donate;
+
