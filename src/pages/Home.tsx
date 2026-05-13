@@ -9,10 +9,9 @@ import { ProductGridSkeleton } from "@/components/Skeletons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/context/I18nContext";
-import heroImg from "@/assets/hero-organic.jpg";
-import bannerImg from "@/assets/banner-categories.jpg";
 import { JivdayaBanner } from "@/components/JivdayaBanner";
 import { Testimonials } from "@/components/Testimonials";
+import { HeroSlider } from "@/components/HeroSlider";
 
 const fetchAll = async (): Promise<Product[]> => unwrap<Product[]>(await api.get("/api/products"));
 const fetchFeatured = async (): Promise<Product[]> => unwrap<Product[]>(await api.get("/api/products/featured"));
@@ -51,38 +50,8 @@ const Home = () => {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroImg}
-            alt="Organic farm"
-            className="w-full h-full object-cover"
-            width={1920}
-            height={1280}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/85 via-primary/60 to-transparent" />
-        </div>
-        <div className="relative container-wide py-20 md:py-32 text-primary-foreground max-w-3xl">
-          <span className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.18em]">
-            <Leaf className="h-3.5 w-3.5 text-accent" /> {t("hero.badge")}
-          </span>
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mt-6 leading-[1.05]">
-            {t("hero.title.a")} <span className="text-accent">{t("hero.title.b")}</span> {t("hero.title.c")}
-          </h1>
-          <p className="mt-5 text-base md:text-lg opacity-90 max-w-xl leading-relaxed">
-            {t("hero.subtitle")}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild variant="hero" size="lg">
-              <Link to="/products">{t("hero.cta")} <ArrowRight className="h-4 w-4 ml-1" /></Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
-              <Link to="/products?category=fruits">{t("hero.browse_fruits")}</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Hero slider */}
+      <HeroSlider />
 
       {/* USP strip */}
       <section className="bg-secondary border-y border-border">
@@ -156,33 +125,6 @@ const Home = () => {
             {showcase.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         )}
-      </section>
-
-      {/* Banner */}
-      <section className="container-wide pb-16">
-        <div className="relative rounded-3xl overflow-hidden">
-          <img
-            src={bannerImg}
-            alt="Organic ingredients"
-            className="w-full h-72 md:h-96 object-cover"
-            loading="lazy"
-            width={1600}
-            height={800}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20 grid items-center">
-            <div className="px-8 md:px-14 max-w-xl text-primary-foreground">
-              <h3 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-                {t("banner.title")}
-              </h3>
-              <p className="mt-3 opacity-90">
-                {t("banner.subtitle")} <span className="bg-accent text-accent-foreground px-2 py-0.5 rounded font-semibold">NISARG10</span>
-              </p>
-              <Button asChild variant="hero" size="lg" className="mt-6">
-                <Link to="/products">{t("banner.cta")}</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Testimonials (live) */}

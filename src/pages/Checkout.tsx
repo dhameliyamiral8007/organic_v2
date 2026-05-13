@@ -143,8 +143,7 @@ const Checkout = () => {
         guestItems: items.map(i => ({
           productId: i.productId,
           quantity: i.quantity,
-          variantIndex: i.variantIndex,
-          variantLabel: i.variantLabel
+          variantIndex: i.variantIndex
         }))
       });
       
